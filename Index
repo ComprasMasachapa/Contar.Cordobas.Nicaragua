@@ -117,6 +117,7 @@
             <!-- Filas generadas por JS -->
         </tbody>
     </table>
+document.addEventListener('keydown', e => { if (e.key === 'Enter') iniciar(); });
 
     <div class="total">
         TOTAL: <span id="totalGeneral">C$ 0.00</span>
@@ -124,7 +125,7 @@
 </div>
 
 <script>
-const billetes = [1000, 500, 200, 100, 50, 20, 10];
+const billetes = [1000, 500, 200, 100, 50, 20, 10,5];
 
 window.onload = () => {
     document.getElementById("inicio").style.display = "block";
