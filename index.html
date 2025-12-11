@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CONTADOR DE BILLETES - MINSA</title>
+<title>CONTADOR DE BILLETES</title>
+
+<link rel="icon" href="https://raw.githubusercontent.com/ComprasMasachapa/etapas-procesos-administrativos-centro-de-salud-masachapa/dc9cf2f07a7a2f8569bc530721e816bb739cb1ea/ICON%20PAGES.png" type="image/png">
 
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
@@ -25,7 +27,6 @@
         border-radius: 20px;
         text-align: center;
         box-shadow: 0 0 20px rgba(0,0,0,0.15);
-        display: none;
     }
 
     .btn-inicio {
@@ -66,31 +67,34 @@
     }
 
     th, td {
-        padding: 12px;
+        padding: 15px;
         border-bottom: 1px solid #ccc;
         text-align: center;
+        font-size: 1.2em;
     }
 
     th {
         background-color: #00796b;
         color: white;
+        font-size: 1.1em;
     }
 
     input {
-        width: 80px;
-        padding: 8px;
-        font-size: 1em;
+        width: 100px;
+        padding: 12px;
+        font-size: 1.3em;
         text-align: center;
-        border-radius: 8px;
-        border: 1px solid #999;
+        border-radius: 10px;
+        border: 1px solid #00796b;
+        background: #f8fffe;
     }
 
     .total {
-        font-size: 1.4em;
-        font-weight: 700;
+        font-size: 1.8em;
+        font-weight: 900;
         color: #004d40;
         text-align: center;
-        padding-top: 15px;
+        padding-top: 10px;
     }
 </style>
 </head>
@@ -98,12 +102,16 @@
 <body>
 
 <div class="inicio-container" id="inicio">
-    <h1>CONTADOR DE BILLETES - MINSA</h1>
+    <h1>CONTADOR DE BILLETES</h1>
     <button class="btn-inicio" onclick="iniciar()">EMPEZAR A CALCULAR</button>
 </div>
 
 <div class="container" id="calculadora">
     <h1>CONTADOR DE BILLETES</h1>
+
+    <div class="total">
+        TOTAL: <span id="totalGeneral">C$ 0.00</span>
+    </div>
 
     <table>
         <thead>
@@ -113,28 +121,31 @@
                 <th>SUBTOTAL</th>
             </tr>
         </thead>
-        <tbody id="tabla">
-            <!-- Filas generadas por JS -->
-        </tbody>
+        <tbody id="tabla"></tbody>
     </table>
-document.addEventListener('keydown', e => { if (e.key === 'Enter') iniciar(); });
-
-    <div class="total">
-        TOTAL: <span id="totalGeneral">C$ 0.00</span>
-    </div>
 </div>
 
 <script>
-const billetes = [1000, 500, 200, 100, 50, 20, 10,5];
+const billetes = [1000, 500, 200, 100, 50, 20, 10];
 
 window.onload = () => {
     document.getElementById("inicio").style.display = "block";
 };
 
+// ENTER en la portada
+document.addEventListener("keydown", e => {
+    if (e.key === "Enter" && document.getElementById("inicio").style.display === "block") {
+        iniciar();
+    }
+});
+
 function iniciar() {
     document.getElementById("inicio").style.display = "none";
     document.getElementById("calculadora").style.display = "block";
     generarTabla();
+
+    // primer input recibe el foco
+    document.querySelector("input[data-den]").focus();
 }
 
 function generarTabla() {
@@ -146,12 +157,31 @@ function generarTabla() {
 
         fila.innerHTML = `
             <td>C$ ${den}</td>
-            <td><input type="number" min="0" value="0" data-den="${den}" oninput="calcular()" /></td>
+            <td>
+                <input 
+                    type="number" 
+                    data-den="${den}" 
+                    oninput="calcular()" 
+                    onfocus="limpiarSiCero(this)" 
+                    onblur="ponerCeroSiVacio(this)"
+                >
+            </td>
             <td id="sub-${den}">C$ 0.00</td>
         `;
 
         tbody.appendChild(fila);
     });
+}
+
+function limpiarSiCero(input) {
+    if (input.value === "0") input.value = "";
+}
+
+function ponerCeroSiVacio(input) {
+    if (input.value.trim() === "" || isNaN(input.value)) {
+        input.value = "0";
+        calcular();
+    }
 }
 
 function calcular() {
