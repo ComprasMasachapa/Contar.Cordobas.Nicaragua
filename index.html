@@ -139,6 +139,18 @@ document.addEventListener("keydown", e => {
     }
 });
 
+    // --- TECLAS ---
+document.addEventListener('keydown', function(e){
+    if(e.key==='Delete' || e.key==='Supr'){
+        limpiarTabla();
+    }
+});
+
+        document.addEventListener('keydown', function(e){
+    if (e.key === 'Delete' || e.key === 'Escape') {
+        limpiarTabla();
+    }
+});
 function iniciar() {
     document.getElementById("inicio").style.display = "none";
     document.getElementById("calculadora").style.display = "block";
